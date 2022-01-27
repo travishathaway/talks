@@ -11,26 +11,29 @@ import feedparser
 T = TypeVar('T')
 
 
-async def batch_download(links: tuple[str], batch_size: int = 10, verbose: bool = False) -> None:
+async def batch_download(urls: tuple[str], batch_size: int = 10, verbose: bool = False) -> None:
     """
     Downloads files asynchronously in batches of `batch_size`
     """
     async with aiohttp.ClientSession() as session:
-        batches = batch_items(links, batch_size)
+        batches = batch_items(urls, batch_size)
         for idx, batch in enumerate(batches):
             if verbose:
                 print(f"Downloading batch {idx + 1}")
-            tasks = tuple(download_link(session, url, verbose=verbose) for url in batch)
+            tasks = tuple(download_url(session, url, verbose=verbose) for url in batch)
             await asyncio.gather(*tasks)
 
 
-async def download_link(session: aiohttp.ClientSession, url: str, verbose: bool = None) -> None:
+async def download_url(session: aiohttp.ClientSession, url: str, verbose: bool = None) -> None:
     """Downloads single file using aiohttp.Session and saves file to disk"""
     file_name = parse.urlparse(url).path.split('/')[-1]
+
     if verbose:
         print(url)
+
     async with aiofiles.open(file_name, 'wb') as fp:
         resp = await session.get(url)
+        resp.raise_for_status()
         await fp.write(await resp.content.read())
 
 
@@ -46,7 +49,7 @@ def batch_items(seq: Sequence[T], batch_size: int) -> tuple[Sequence[T]]:
     )
 
 
-def get_mp3_file_links(feed: feedparser.FeedParserDict) -> tuple[str]:
+def get_mp3_file_urls(feed: feedparser.FeedParserDict) -> tuple[str]:
     mp3_type = "audio/mpeg"
 
     return tuple(
@@ -69,8 +72,8 @@ def main(podcast_feed_url: str, limit: int, batch_size: int, verbose: bool) -> N
     concurrently.
     """
     feed = feedparser.parse(podcast_feed_url)
-    mp3_links = get_mp3_file_links(feed)[:limit]
-    asyncio.run(batch_download(mp3_links, batch_size=batch_size, verbose=verbose))
+    mp3_urls = get_mp3_file_urls(feed)[:limit]
+    asyncio.run(batch_download(mp3_urls, batch_size=batch_size, verbose=verbose))
 
 
 if __name__ == '__main__':

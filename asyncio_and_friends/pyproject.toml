@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "async_and_friends"
+name = "asyncio_and_friends"
 version = "0.1.0"
 description = ""
 authors = ["Travis Hathaway <travis.j.hathaway@gmail.com>"]
@@ -18,3 +18,7 @@ ipython = "^8.0.1"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+example_one_a = "asyncio_and_friends.example_one_asynchronous:main"
+example_one_s = "asyncio_and_friends.example_one_synchronous:main"
