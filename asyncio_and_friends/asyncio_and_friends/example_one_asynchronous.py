@@ -1,6 +1,5 @@
 import asyncio
-import math
-from typing import cast, Sequence, TypeVar
+from typing import cast, TypeVar
 from urllib import parse
 
 import aiofiles
@@ -16,12 +15,16 @@ async def batch_download(urls: tuple[str], batch_size: int = 10, verbose: bool =
     Downloads files asynchronously in batches of `batch_size`
     """
     async with aiohttp.ClientSession() as session:
-        batches = batch_items(urls, batch_size)
-        for idx, batch in enumerate(batches):
-            if verbose:
-                print(f"Downloading batch {idx + 1}")
-            tasks = tuple(download_url(session, url, verbose=verbose) for url in batch)
-            await asyncio.gather(*tasks)
+        sem = asyncio.Semaphore(batch_size)  # This allows us a to limit our concurrency.
+
+        async def limit_wrapper(coroutine):
+            async with sem:
+                if verbose:
+                    print(coroutine)
+                await coroutine
+
+        tasks = tuple(limit_wrapper(download_url(session, url, verbose=verbose)) for url in urls)
+        await asyncio.gather(*tasks)
 
 
 async def download_url(session: aiohttp.ClientSession, url: str, verbose: bool = None) -> None:
@@ -35,18 +38,6 @@ async def download_url(session: aiohttp.ClientSession, url: str, verbose: bool =
         resp = await session.get(url)
         resp.raise_for_status()
         await fp.write(await resp.content.read())
-
-
-def batch_items(seq: Sequence[T], batch_size: int) -> tuple[Sequence[T]]:
-    """
-    This function is used to group items of a sequence. In this script,
-    it's used to batch out the async tasks.
-    """
-    batches = math.ceil(len(seq) / batch_size)
-    return tuple(
-        seq[idx * batch_size: idx * batch_size + batch_size]
-        for idx in range(batches)
-    )
 
 
 def get_mp3_file_urls(feed: feedparser.FeedParserDict) -> tuple[str]:
