@@ -20,5 +20,6 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-example_one_a = "asyncio_and_friends.example_one_asynchronous:main"
-example_one_s = "asyncio_and_friends.example_one_synchronous:main"
+podcast_dl_async = "asyncio_and_friends.podcast_feed_download_async:main"
+podcast_dl_sync = "asyncio_and_friends.podcast_feed_download_sync:main"
+simple_http = "asyncio_and_friends.simple_http_example:main"
