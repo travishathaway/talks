@@ -15,7 +15,7 @@ async def batch_download(urls: tuple[str], batch_size: int = 10, verbose: bool =
     Downloads files asynchronously in batches of `batch_size`
     """
     async with aiohttp.ClientSession() as session:
-        sem = asyncio.Semaphore(batch_size)  # This allows us a to limit our concurrency.
+        sem = asyncio.Semaphore(batch_size)  # This allows us to limit our concurrency.
 
         async def limit_wrapper(coroutine):
             async with sem:
