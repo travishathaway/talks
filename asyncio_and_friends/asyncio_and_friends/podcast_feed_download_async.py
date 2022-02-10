@@ -1,13 +1,11 @@
 import asyncio
-from typing import cast, TypeVar
+from typing import cast
 from urllib import parse
 
 import aiofiles
 import aiohttp
 import click
 import feedparser
-
-T = TypeVar('T')
 
 
 async def limited_download(urls: tuple[str], limit: int = 10, verbose: bool = False) -> None:
