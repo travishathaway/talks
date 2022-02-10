@@ -11,6 +11,7 @@ requests = "^2.27.1"
 feedparser = "^6.0.8"
 aiofiles = "^0.8.0"
 click = "^8.0.3"
+aiosqlite = "^0.17.0"
 
 [tool.poetry.dev-dependencies]
 ipython = "^8.0.1"
@@ -23,3 +24,4 @@ build-backend = "poetry.core.masonry.api"
 podcast_dl_async = "asyncio_and_friends.podcast_feed_download_async:main"
 podcast_dl_sync = "asyncio_and_friends.podcast_feed_download_sync:main"
 simple_http = "asyncio_and_friends.simple_http_example:main"
+weather_example = "asyncio_and_friends.weather_updates_queue:main"

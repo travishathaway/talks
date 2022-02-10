@@ -10,29 +10,26 @@ import feedparser
 T = TypeVar('T')
 
 
-async def batch_download(urls: tuple[str], batch_size: int = 10, verbose: bool = False) -> None:
+async def limited_download(urls: tuple[str], limit: int = 10, verbose: bool = False) -> None:
     """
-    Downloads files asynchronously in batches of `batch_size`
+    Downloads files asynchronously but limits concurrency to `limit`
     """
     async with aiohttp.ClientSession() as session:
-        sem = asyncio.Semaphore(batch_size)  # This allows us a to limit our concurrency.
+        sem = asyncio.Semaphore(limit)  # This allows us a to limit our concurrency.
 
-        async def limit_wrapper(coroutine):
+        async def _download_url(url):
             async with sem:
                 if verbose:
-                    print(coroutine)
-                await coroutine
+                    print(url)
+                await download_url(session, url)
 
-        tasks = tuple(limit_wrapper(download_url(session, url, verbose=verbose)) for url in urls)
+        tasks = tuple(_download_url(url) for url in urls)
         await asyncio.gather(*tasks)
 
 
-async def download_url(session: aiohttp.ClientSession, url: str, verbose: bool = None) -> None:
+async def download_url(session: aiohttp.ClientSession, url: str) -> None:
     """Downloads single file using aiohttp.Session and saves file to disk"""
     file_name = parse.urlparse(url).path.split('/')[-1]
-
-    if verbose:
-        print(url)
 
     async with aiofiles.open(file_name, 'wb') as fp:
         resp = await session.get(url)
@@ -64,7 +61,7 @@ def main(podcast_feed_url: str, limit: int, batch_size: int, verbose: bool) -> N
     """
     feed = feedparser.parse(podcast_feed_url)
     mp3_urls = get_mp3_file_urls(feed)[:limit]
-    asyncio.run(batch_download(mp3_urls, batch_size=batch_size, verbose=verbose))
+    asyncio.run(limited_download(mp3_urls, limit=batch_size, verbose=verbose))
 
 
 if __name__ == '__main__':
