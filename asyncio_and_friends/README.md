@@ -1,6 +1,6 @@
 # Asnycio and Friends
 
-To see the slides from this talk, [check them on Google Docs](https://docs.google.com/presentation/d/1ate_nmSvK4C0jSuhrf7Jy1WB9IZQU3LmK6ao34Fzxjo/edit?usp=sharing)
+To see the slides from this talk, [check them out on Google Docs](https://docs.google.com/presentation/d/1ate_nmSvK4C0jSuhrf7Jy1WB9IZQU3LmK6ao34Fzxjo/edit?usp=sharing)
 
 ## Setup
 
