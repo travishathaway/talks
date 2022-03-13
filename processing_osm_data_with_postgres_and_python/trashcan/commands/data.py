@@ -2,6 +2,7 @@ import click
 
 from trashcan.validators import validate_json_file
 from trashcan.osmium import extract
+from trashcan import db
 
 
 @click.group()
@@ -12,7 +13,11 @@ def data():
 
 
 @click.command('import')
-@click.argument('osm_file', type=click.Path(file_okay=True, dir_okay=False, readable=True, exists=True))
+@click.argument(
+    'osm_file', type=click.Path(
+        file_okay=True, dir_okay=False, readable=True, exists=True
+    )
+)
 @click.argument('config', type=click.File(), callback=validate_json_file)
 def import_data(osm_file, config):
     """
@@ -23,4 +28,10 @@ def import_data(osm_file, config):
     extract(osm_file, cities[0])
 
 
+@click.command()
+def query():
+    db.testing()
+
+
 data.add_command(import_data)
+data.add_command(query)
