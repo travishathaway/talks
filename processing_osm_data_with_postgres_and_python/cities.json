@@ -1,0 +1,124 @@
+{
+  "cities": [
+    {
+      "name": "Berlin",
+      "bundesland": "Berlin",
+      "population": 3664088,
+      "osm_data_link": "https://download.geofabrik.de/europe/germany/berlin-latest.osm.pbf",
+      "bbox": [
+        13.094083496270972,
+        52.33482927655171,
+        13.766772766313322,
+        52.67206633881316
+      ]
+    },
+    {
+      "name": "Hamburg",
+      "bundesland": "Hamburg",
+      "population": 1852478,
+      "osm_data_link": "https://download.geofabrik.de/europe/germany/hamburg-latest.osm.pbf",
+      "bbox": [
+        8.427474937731327,
+        53.391761283459466,
+        10.331690370372208,
+        53.96132356351048
+      ]
+    },
+    {
+      "name": "M\u00fcnchen",
+      "bundesland": "Bayern",
+      "population": 1488202,
+      "osm_data_link": "https://download.geofabrik.de/europe/germany/bayern/oberbayern-latest.osm.pbf",
+      "bbox": [
+        11.36632414978816,
+        48.058753449509965,
+        11.728392471490865,
+        48.24522638268751
+      ]
+    },
+    {
+      "name": "K\u00f6ln",
+      "bundesland": "Nordrhein-Westfalen",
+      "population": 1083498,
+      "osm_data_link": "https://download.geofabrik.de/europe/germany/nordrhein-westfalen-latest.osm.pbf",
+      "bbox": [
+        6.7792340982232995,
+        50.82752142259416,
+        7.168636776194676,
+        51.08204278618401
+      ]
+    },
+    {
+      "name": "Frankfurt am Main",
+      "bundesland": "Hessen",
+      "population": 764104,
+      "osm_data_link": "https://download.geofabrik.de/europe/germany/hessen-latest.osm.pbf",
+      "bbox": [
+        8.479069925273013,
+        50.01262276172167,
+        8.806700589117133,
+        50.22419160652531
+      ]
+    },
+    {
+      "name": "Stuttgart",
+      "bundesland": "Stuttgart",
+      "population": 630305,
+      "osm_data_link": "https://download.geofabrik.de/europe/germany/baden-wuerttemberg/stuttgart-regbez-latest.osm.pbf",
+      "bbox": [
+        9.044610698930166,
+        48.68919790522467,
+        9.321990010086834,
+        48.86356072347189
+      ]
+    },
+    {
+      "name": "D\u00fcsseldorf",
+      "bundesland": "Nordrhein-Westfalen",
+      "population": 620523,
+      "osm_data_link": "https://download.geofabrik.de/europe/germany/nordrhein-westfalen-latest.osm.pbf",
+      "bbox": [
+        6.695557433690569,
+        51.12143639634187,
+        6.94659003163877,
+        51.349534992045186
+      ]
+    },
+    {
+      "name": "Leipzig",
+      "bundesland": "Sachsen",
+      "population": 597493,
+      "osm_data_link": "https://download.geofabrik.de/europe/germany/sachsen-latest.osm.pbf",
+      "bbox": [
+        12.242410288897606,
+        51.23493594192193,
+        12.548142994044012,
+        51.44484913146013
+      ]
+    },
+    {
+      "name": "Dortmund",
+      "bundesland": "Nordrhein-Westfalen",
+      "population": 587696,
+      "osm_data_link": "https://download.geofabrik.de/europe/germany/nordrhein-westfalen-latest.osm.pbf",
+      "bbox": [
+        7.309062882636431,
+        51.412524512908035,
+        7.644776455578273,
+        51.5970263718098
+      ]
+    },
+    {
+      "name": "Essen",
+      "bundesland": "Nordrhein-Westfalen",
+      "population": 582415,
+      "osm_data_link": "https://download.geofabrik.de/europe/germany/nordrhein-westfalen-latest.osm.pbf",
+      "bbox": [
+        6.901087238510484,
+        51.34460744422419,
+        7.144342403403524,
+        51.531217077261886
+      ]
+    }
+  ]
+}
