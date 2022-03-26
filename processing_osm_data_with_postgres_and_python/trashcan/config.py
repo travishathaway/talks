@@ -2,7 +2,7 @@ import json
 import sys
 from dataclasses import dataclass
 from functools import wraps
-from typing import Sequence
+from typing import Sequence, Optional
 
 import click
 
@@ -18,7 +18,10 @@ class CityConfig:
 
 @dataclass
 class Config:
-    pgdsn: str = None
+    # Database settings
+    pgdsn: Optional[str] = None
+
+    # Data analysis settings
     cities: Sequence[CityConfig] = None
 
 

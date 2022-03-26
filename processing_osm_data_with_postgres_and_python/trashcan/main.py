@@ -3,6 +3,7 @@ import json
 
 import click
 from trashcan.commands.data import data
+from trashcan.commands.report import report
 from trashcan.config import parse_config_file
 
 
@@ -14,6 +15,7 @@ def cli(ctx):
 
 
 cli.add_command(data)
+cli.add_command(report)
 
 
 if __name__ == "__main__":

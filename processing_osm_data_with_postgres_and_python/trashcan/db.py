@@ -34,7 +34,15 @@ def psycopg2_cur(config):
 
 
 @psycopg2_cur()
-def testing(cursor):
-    cursor.execute('select 1 + 1 as the_answer')
+def get_amenity_count(cursor, amenity: str):
+    sql = '''
+    WITH all_amenity_count as (
+        SELECT count(*) as cnt FROM amenity_polygons WHERE type = %(amenity)s
+        UNION
+        SELECT count(*) as cnt FROM amenity_points WHERE type = %(amenity)s
+    )
+    SELECT sum(cnt) FROM all_amenity_count
+    '''
+    cursor.execute(sql, {'amenity': amenity})
     res = cursor.fetchone()
-    print(res.the_answer)
+    print(res)
