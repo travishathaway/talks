@@ -1,30 +1,70 @@
 from itertools import chain
 import subprocess
 from pathlib import Path
+from typing import Iterable
 
 import click
 
 from trashcan.types import OSMCityData
 
 
-def extract(osm_file: Path, city_config: OSMCityData) -> None:
+def extract(
+        osm_file: Path,
+        output: Path,
+        city_config: OSMCityData,
+        dry_run: bool = False,
+        silent: bool = False
+) -> None:
     """
     Given a `city_config` object, extract the contents of `osmfile` according to the `bbox` property.
     """
-    bbox_strings = (str(coord) for coord in city_config['bbox'])
+    buffer = 0.05
+    x_min, y_min, x_max, y_max = city_config['bbox']
+    bbox = x_min - buffer, y_min - buffer, x_max + buffer, y_max + buffer
+    bbox_strings = (str(coord) for coord in bbox)
     bbox_str = ','.join(bbox_strings)
-    output_file = f'{city_config["name"].lower().replace(" ", "_")}.osm.pbf'
 
     command = [
         'osmium',
         'extract',
+        '--overwrite',
         '--bbox',
         bbox_str,
         '--output',
-        output_file,
-        osm_file,
+        str(output),
+        str(osm_file),
     ]
-    subprocess.run(command)
+
+    if not silent:
+        click.echo(f"{click.style('Running Command:', fg='green')} {' '.join(command)}")
+    if not dry_run:
+        subprocess.run(command)
+
+
+def merge(
+        osm_files: Iterable[Path],
+        output='project-data.osm.pbf',
+        silent: bool = False,
+        dry_run: bool = False
+) -> None:
+    """
+    Provides a thin wrapper around the `osmium merge` command
+    """
+    command = [
+        'osmium',
+        'merge'
+    ] + [
+        str(filename) for filename in osm_files
+    ] + [
+        '--overwrite',
+        '--output',
+        output
+    ]
+
+    if not silent:
+        click.echo(f"{click.style('Running Command:', fg='green')} {' '.join(command)}")
+    if not dry_run:
+        subprocess.run(command)
 
 
 def tags_filter(

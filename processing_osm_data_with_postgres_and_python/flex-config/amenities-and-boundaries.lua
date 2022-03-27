@@ -1,5 +1,6 @@
 local tables = {}
 
+-- Amenity tables
 tables.amenities = osm2pgsql.define_way_table('amenity_polygons', {
     { column = 'type', type = 'text' },
     { column = 'osm_type', type = 'text' },
@@ -13,6 +14,20 @@ tables.amenity_points = osm2pgsql.define_node_table('amenity_points', {
     { column = 'geom', type = 'geometry', projection = 3857 },
 })
 
+
+-- Leisure tables
+-- tables.amenities = osm2pgsql.define_way_table('leisure_polygons', {
+--     { column = 'type', type = 'text' },
+--     { column = 'osm_type', type = 'text' },
+--     { column = 'tags', type = 'jsonb' },
+--     { column = 'geom', type = 'geometry', projection = 3857 },
+-- })
+--
+-- tables.amenity_points = osm2pgsql.define_node_table('amenity_points', {
+--     { column = 'type', type = 'text' },
+--     { column = 'tags', type = 'jsonb' },
+--     { column = 'geom', type = 'geometry', projection = 3857 },
+-- }
 tables.admin_boundaries = osm2pgsql.define_way_table('admin_boundaries', {
     { column = 'level', type = 'integer' },
     { column = 'osm_type', type = 'text' },
@@ -22,7 +37,7 @@ tables.admin_boundaries = osm2pgsql.define_way_table('admin_boundaries', {
 
 function osm2pgsql.process_node(object)
     if object.tags.amenity or object.tags.shop then
-        tables.amenity_points:add_row({
+        tables.amenities:add_row({
             type = object.tags.amenity,
             tags = object.tags,
             geom = { create = 'point' }

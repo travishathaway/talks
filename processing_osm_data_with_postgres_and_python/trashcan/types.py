@@ -7,3 +7,5 @@ class OSMCityData(TypedDict):
     population: int
     osm_data_link: str
     bbox: list[float]
+    output: str
+    output_type: str

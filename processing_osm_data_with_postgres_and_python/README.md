@@ -44,7 +44,7 @@ curl -O https://download.geofabrik.de/europe/germany-latest.osm.pbf
 trash data import germany-latest.osm.pbf \
     --filters='/boundary=administrative /amenity /shop' \
     --database=germany_osm \
-    --style=osm2pgsql_flex_scripts/amenities-and-boundaries.lua \
+    --style=flex-config/amenities-and-boundaries.lua \
     --output flex
 ```
 
@@ -52,33 +52,61 @@ trash data import germany-latest.osm.pbf \
 
 #### 4.
 
+What are some tables we might want to create?
+
+- amenity
+- leisure
+- building
+- roads
+- boundary
+
 
 ## osmium examples
 
 ## osm2pgsql lua import scripts
 
-```sql
+### Trash can query
 
-SELECT
-    dp.name,
-    min(ST_X((dp).bounding_box.geom)) as lon_min,
-    min(ST_Y((dp).bounding_box.geom)) as lat_min,
-    max(ST_X((dp).bounding_box.geom)) as lon_max,
-    max(ST_Y((dp).bounding_box.geom)) as lat_max
-FROM (
-    SELECT
-        tags->'name' as name,
-        ST_DumpPoints(ST_Envelope(ST_Transform(geom, 4236))) as bounding_box
-    FROM
-        admin_boundaries
-    WHERE
-        tags->>'de:place' = 'city'
-    AND
-        tags->>'name'::text IN(
-            'Berlin','Hamburg','München','Köln','Frankfurt am Main',
-            'Stuttgart','Düsseldorf','Leipzig','Dortmund','Essen'
-        )
-) as dp
-GROUP BY
-    dp.name
+```sql
+WITH count_data as (
+	SELECT
+		pl.name as city
+		, pl.geom
+		, pp.osm_subtype as amenity
+		, ST_Area(ST_Transform(pl.geom, 4326)::geography) / 1000000 as area_sq_km
+		, pp.osm_subtype as amenity_type
+		, count(*) as count
+	FROM
+		poi_point pp
+	JOIN
+		place_polygon pl
+	ON
+		ST_Contains(pl.geom, pp.geom)
+	WHERE
+	(
+		pp.osm_type = 'amenity'
+	AND
+		pp.osm_subtype = 'waste_basket'
+	)
+	AND
+		pl.name in (
+			'Berlin','Hamburg','München','Köln','Frankfurt am Main',
+			'Stuttgart','Düsseldorf','Leipzig','Dortmund','Essen'
+		)
+	AND
+		round(ST_Area(ST_Transform(pl.geom, 4326)::geography) / 1000) / 1000 > 1
+	GROUP BY
+		pp.osm_subtype, pl.name, pl.geom
+)
+
+SELECT 
+	city
+	, amenity
+	, area_sq_km
+	, count
+	, count / round(area_sq_km) as amenity_per_sq_km
+FROM 
+	count_data
+ORDER BY
+	5 desc;
 ```
