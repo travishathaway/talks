@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Sample project for working with OpenStreetMap data with PostgreSQL and Python"
 authors = ["Your Name <you@example.com>"]
 license = "GPLv3"
+include = ['trashcan/report/sql/*.sql']
 
 [tool.poetry.dependencies]
 python = "^3.8"
