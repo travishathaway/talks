@@ -24,12 +24,12 @@ WITH count_data as (
 )
 
 SELECT
-	city
-	, amenity
-	, area_sq_km
-	, count
-	, count / round(area_sq_km) as amenity_per_sq_km
+	city as {city}
+	, amenity as {amenity}
+	, area_sq_km as {area_sq_km}
+	, count as {count}
+	, count / round(area_sq_km) as {amenity_per_sq_km}
 FROM
 	count_data
 ORDER BY
-	5 desc;
+	5 asc;

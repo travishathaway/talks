@@ -1,3 +1,4 @@
+import enum
 from functools import wraps
 
 import psycopg2

@@ -92,4 +92,3 @@ def extract(config, osm_data_file, output, silent, dry_run):
 
 data.add_command(import_data)
 data.add_command(extract)
-
