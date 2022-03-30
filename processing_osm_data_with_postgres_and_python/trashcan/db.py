@@ -1,4 +1,3 @@
-import enum
 from functools import wraps
 
 import psycopg2
@@ -32,18 +31,3 @@ def psycopg2_cur(config):
         return wrapper
 
     return wrap
-
-
-@psycopg2_cur()
-def get_amenity_count(cursor, amenity: str):
-    sql = '''
-    WITH all_amenity_count as (
-        SELECT count(*) as cnt FROM amenity_polygons WHERE type = %(amenity)s
-        UNION
-        SELECT count(*) as cnt FROM amenity_points WHERE type = %(amenity)s
-    )
-    SELECT sum(cnt) FROM all_amenity_count
-    '''
-    cursor.execute(sql, {'amenity': amenity})
-    res = cursor.fetchone()
-    print(res)

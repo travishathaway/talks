@@ -1,41 +1,8 @@
-import pathlib
-from typing import Sequence, Optional
+from typing import Sequence, Optional, NamedTuple
 
+from rich.console import Console
+from rich.table import Table
 import plotly.graph_objects as go
-
-from trashcan.db import psycopg2_cur
-
-
-REPORT_SQL_DIR = pathlib.Path(__file__).parent.absolute().joinpath('sql')
-
-
-AMENITY_DATA_FIELDS = {
-    'city': 'city',
-    'amenity': 'amenity',
-    'area_sq_km': 'area_sq_km',
-    'count': 'count',
-    'amenity_per_sq_km': 'amenity_per_sq_km',
-}
-
-
-@psycopg2_cur()
-def get_amenity_data_by_city(cursor, cities: Sequence[str], amenity: str):
-    """
-    Grab the count of amenity for a list of cities.
-    """
-    sql_file = REPORT_SQL_DIR.joinpath('amenity_counts_by_city.sql')
-
-    with open(sql_file) as fp:
-        sql_str = fp.read()
-
-    sql_str = sql_str.format(**AMENITY_DATA_FIELDS)
-    params = {
-        'amenity': amenity,
-        'cities': cities
-    }
-    cursor.execute(sql_str, params)
-
-    return cursor.fetchall()
 
 
 def create_bar_chart(
@@ -53,7 +20,8 @@ def create_bar_chart(
     fig = go.Figure(go.Bar(
         x=[getattr(row, x) for row in data],
         y=[getattr(row, y) for row in data],
-        orientation='h'
+        orientation='h',
+        texttemplate='%{x:.2f}',
     ))
     xaxis_title = xaxis_title or x
     yaxis_title = yaxis_title or y
@@ -82,5 +50,26 @@ def create_bar_chart(
             )
         )
     )
-    fig.show()
-    # fig.write_html(output_file)
+    fig.update_traces(marker_color='#45818e')
+    fig.write_html(output_file)
+
+
+def print_table(data: Sequence[NamedTuple], title: str, fields: dict) -> None:
+    """Uses rich to print a table output"""
+    table = Table(title=title)
+    display_funcs = tuple(
+        fld.get('display_func', lambda x: x)
+        for key, fld in fields.items()
+    )
+
+    for key, fld in fields.items():
+        table.add_column(fld['display_name'], style=fld['color'])
+
+    for row in data:
+        row_str = tuple(
+            d_func(fld) for fld, d_func in zip(row, display_funcs)
+        )
+        table.add_row(*row_str)
+
+    console = Console()
+    console.print(table)

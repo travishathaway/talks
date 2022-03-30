@@ -3,7 +3,7 @@ WITH count_data as (
 		pl.name as city
 		, pl.geom
 		, pp.osm_type as amenity
-		, ST_Area(ST_Transform(pl.geom, 4326)::geography) / 1000000 as area_sq_km
+		, pl.area / 1000000.0 as area_sq_km
 		, count(*) as count
 	FROM
 		amenity_point pp
@@ -20,7 +20,7 @@ WITH count_data as (
 	AND
 		round(ST_Area(ST_Transform(pl.geom, 4326)::geography) / 1000) / 1000 > 1
 	GROUP BY
-		pp.osm_type, pl.name, pl.geom
+		pp.osm_type, pl.name, pl.geom, pl.area
 )
 
 SELECT
@@ -28,8 +28,8 @@ SELECT
 	, amenity as {amenity}
 	, area_sq_km as {area_sq_km}
 	, count as {count}
-	, count / round(area_sq_km) as {amenity_per_sq_km}
+	, count / area_sq_km as {amenity_per_sq_km}
 FROM
 	count_data
 ORDER BY
-	5 asc;
+	5 desc;
