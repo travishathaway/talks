@@ -5,7 +5,7 @@ from typing import Iterable
 
 import click
 
-from trashcan.types import OSMCityData
+from osmprj.types import OSMCityData
 
 
 def extract(

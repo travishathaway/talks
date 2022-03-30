@@ -2,7 +2,7 @@ import pathlib
 from functools import wraps
 from typing import Sequence, NamedTuple
 
-from trashcan.db import psycopg2_cur
+from osmprj.db import psycopg2_cur
 
 
 REPORT_SQL_DIR = pathlib.Path(__file__).parent.absolute().joinpath('sql')

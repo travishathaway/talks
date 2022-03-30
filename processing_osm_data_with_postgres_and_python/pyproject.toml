@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "trashcan"
+name = "osmprj"
 version = "0.1.0"
 description = "Sample project for working with OpenStreetMap data with PostgreSQL and Python"
 authors = ["Your Name <you@example.com>"]
 license = "GPLv3"
-include = ['trashcan/report/sql/*.sql']
+include = ['osmprj/report/sql/*.sql']
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -21,4 +21,4 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-trash = 'trashcan.main:cli'
+osmprj = 'osmprj.main:cli'

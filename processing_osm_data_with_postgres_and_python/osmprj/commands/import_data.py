@@ -4,7 +4,7 @@ from contextlib import contextmanager
 
 import click
 
-from trashcan import osm
+from osmprj import osm
 
 
 @contextmanager

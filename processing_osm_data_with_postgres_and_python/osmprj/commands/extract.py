@@ -4,8 +4,8 @@ from functools import partial
 
 import click
 
-from trashcan.validators import validate_json_file
-from trashcan import osm
+from osmprj.validators import validate_json_file
+from osmprj import osm
 
 
 @click.command('extract')

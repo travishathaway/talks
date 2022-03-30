@@ -1,12 +1,12 @@
 import click
 
-from trashcan.reports.amenities import (
+from osmprj.reports.amenities import (
     get_amenity_data_by_city,
     get_parking_area_by_city,
     AMENITY_DATA_FIELDS,
     PARKING_DATA_FIELDS,
 )
-from trashcan.charts import create_bar_chart, print_table
+from osmprj.charts import create_bar_chart, print_table
 
 OUTPUT_TERMINAL = 'terminal'
 OUTPUT_CHART = 'chart'

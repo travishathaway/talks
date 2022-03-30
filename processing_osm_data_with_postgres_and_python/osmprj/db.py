@@ -3,7 +3,7 @@ from functools import wraps
 import psycopg2
 from psycopg2.extras import NamedTupleCursor
 
-from trashcan.config import get_config
+from osmprj.config import get_config
 
 
 @get_config

@@ -1,9 +1,9 @@
 import click
 
-from trashcan.commands.extract import extract
-from trashcan.commands.import_data import import_data
-from trashcan.commands.report import report
-from trashcan.config import parse_config_file
+from osmprj.commands.extract import extract
+from osmprj.commands.import_data import import_data
+from osmprj.commands.report import report
+from osmprj.config import parse_config_file
 
 
 @click.group()
