@@ -11,6 +11,8 @@ from trashcan.charts import create_bar_chart, print_table
 OUTPUT_TERMINAL = 'terminal'
 OUTPUT_CHART = 'chart'
 
+OUTPUT_CHOICES = (OUTPUT_CHART, OUTPUT_TERMINAL)
+
 
 @click.group()
 def report():
@@ -22,7 +24,7 @@ def report():
 @click.command('amenity_city')
 @click.argument('cities', type=str)
 @click.argument('amenity', type=str)
-@click.option('-o', '--output', default=OUTPUT_TERMINAL)
+@click.option('-o', '--output', default=OUTPUT_TERMINAL, help=f'Possible choices: {", ".join(OUTPUT_CHOICES)}')
 def amenity_count_by_city(cities, amenity, output):
     cities = tuple(cty.strip() for cty in cities.split(','))
     data = get_amenity_data_by_city(cities, amenity)
@@ -42,7 +44,7 @@ def amenity_count_by_city(cities, amenity, output):
 
 @click.command('parking_space')
 @click.argument('cities', type=str)
-@click.option('-o', '--output', default=OUTPUT_TERMINAL)
+@click.option('-o', '--output', default=OUTPUT_TERMINAL, help=f'Possible choices: {",".join(OUTPUT_CHOICES)}')
 def parking_space_by_city(cities, output):
     cities = tuple(cty.strip() for cty in cities.split(','))
     data = get_parking_area_by_city(cities)

@@ -1,8 +1,7 @@
-import os
-import json
-
 import click
-from trashcan.commands.data import data
+
+from trashcan.commands.extract import extract
+from trashcan.commands.import_data import import_data
 from trashcan.commands.report import report
 from trashcan.config import parse_config_file
 
@@ -14,7 +13,8 @@ def cli(ctx):
     ctx.obj['config'] = parse_config_file()
 
 
-cli.add_command(data)
+cli.add_command(import_data)
+cli.add_command(extract)
 cli.add_command(report)
 
 

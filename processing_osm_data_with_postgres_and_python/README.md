@@ -1,112 +1,57 @@
 # Processing OpenStreetMap Data with PostgreSQL and Python
 
-This folder contains examples and files related to my PyConDE2022 talk.
+This folder contains and example CLI program which was briefly described in the
+PyConDE 2022 talk, "Processing OpenStreetMap Data with PostgreSQL and Python".
 
-## Requires
+Check out the slides to that presentation here:
+[Slides link](https://docs.google.com/presentation/d/1nFQr_NUr-QmG0n-wusnctjnAl8YUKmMuz3PhU_FoTYo/edit?usp=sharing)
+
+## Getting started
+
+This project is managed via poetry. To begin using run the following commands:
+
+```bash
+$ poetry install 
+# ... Installs dependencies
+$ poetry shell
+# ... Activates virtual environment
+```
+
+## Other requirements
 
 - osmium (^1.1.1)
 - osm2pgsql (^1.6.0)
 
-## Problem scenario
+## osmprj CLI
 
-You have just won a contract from *Trashcans United* a world renown trashcan advocacy group.
+Below are the commands for this CLI:
 
-### Requirements:
+### `osmprj extract`
 
-- Statistics for all trash cans in the 10 largest cities in Germany
-- Tracking the number of trash cans over time (ideally every year)
-- Adaptability as they may wish to include more cities and countries over time.
+```
+Usage: osm extract [OPTIONS] CONFIG OSM_DATA_FILE
 
-### Steps to solving this problem
+  Extracts the given bounding boxes in CONFIG and combines them all into a
+  single osm.pbf file
 
-#### 1. Compile a list of the top ten cities in Germany by population
-
-1. Berlin
-2. Hamburg
-3. München
-4. Köln
-5. Frankfurt am Main
-6. Stuttgart
-7. Düsseldorf
-8. Leipzig
-9. Dortmund
-10. Essen
-
-#### 2. Download applicable OSM data
-
-```bash
-curl -O https://download.geofabrik.de/europe/germany-latest.osm.pbf
+Options:
+  -o, --output TEXT
+  --silent
+  --dry-run
+  --help             Show this message and exit.
 ```
 
-#### 3. Extract admin boundaries and amenities from this data set
+### `osmprj report`
 
-```bash
-trash data import germany-latest.osm.pbf \
-    --filters='/boundary=administrative /amenity /shop' \
-    --database=germany_osm \
-    --style=flex-config/amenities-and-boundaries.lua \
-    --output flex
 ```
+Usage: osmprj report [OPTIONS] COMMAND [ARGS]...
 
-#### Now we are ready for analysis!
+  These sub-commands are responsible for generating reports
 
-#### 4.
+Options:
+  --help  Show this message and exit.
 
-What are some tables we might want to create?
-
-- amenity
-- leisure
-- building
-- roads
-- boundary
-
-
-## osmium examples
-
-## osm2pgsql lua import scripts
-
-### Trash can query
-
-```sql
-WITH count_data as (
-	SELECT
-		pl.name as city
-		, pl.geom
-		, pp.osm_subtype as amenity
-		, ST_Area(ST_Transform(pl.geom, 4326)::geography) / 1000000 as area_sq_km
-		, pp.osm_subtype as amenity_type
-		, count(*) as count
-	FROM
-		poi_point pp
-	JOIN
-		place_polygon pl
-	ON
-		ST_Contains(pl.geom, pp.geom)
-	WHERE
-	(
-		pp.osm_type = 'amenity'
-	AND
-		pp.osm_subtype = 'waste_basket'
-	)
-	AND
-		pl.name in (
-			'Berlin','Hamburg','München','Köln','Frankfurt am Main',
-			'Stuttgart','Düsseldorf','Leipzig','Dortmund','Essen'
-		)
-	AND
-		round(ST_Area(ST_Transform(pl.geom, 4326)::geography) / 1000) / 1000 > 1
-	GROUP BY
-		pp.osm_subtype, pl.name, pl.geom
-)
-
-SELECT 
-	city
-	, amenity
-	, area_sq_km
-	, count
-	, count / round(area_sq_km) as amenity_per_sq_km
-FROM 
-	count_data
-ORDER BY
-	5 desc;
+Commands:
+  amenity_city
+  parking_space
 ```
